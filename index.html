@@ -3,36 +3,55 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#071b10">
-<title>Rick Perez | Mega Marshalon</title>
+<title>Rick Perez • Holographic Marshal Card</title>
 <style>
-*{box-sizing:border-box} body{margin:0;min-height:100vh;background:radial-gradient(circle at top,#174c2b,#07130c 55%,#000);color:#fff;font-family:Arial,Helvetica,sans-serif;display:flex;align-items:center;justify-content:center;padding:24px}
-.wrap{width:min(100%,520px);text-align:center}.card{width:100%;height:auto;border-radius:20px;box-shadow:0 18px 55px #000;display:block}
-.controls{display:flex;gap:12px;justify-content:center;margin-top:18px;flex-wrap:wrap}
-button,a.btn{border:2px solid #d7ad32;background:#0b2d18;color:#f6d86d;padding:12px 18px;border-radius:999px;font-weight:800;font-size:15px;text-decoration:none;cursor:pointer}
-button:hover,a.btn:hover{background:#164d2b}.hint{opacity:.72;font-size:13px;margin-top:13px}
+:root{--mx:50%;--my:50%;--rx:0deg;--ry:0deg}
+*{box-sizing:border-box}
+body{margin:0;min-height:100svh;display:grid;place-items:center;background:radial-gradient(circle at 50% 25%,#173b28,#07100b 58%,#020403);font-family:system-ui,-apple-system,sans-serif;color:#fff;overflow:hidden}
+.wrap{text-align:center;padding:24px}
+.scene{width:min(88vw,520px);aspect-ratio:749/1050;perspective:1200px;margin:auto;touch-action:none}
+.card{width:100%;height:100%;position:relative;transform-style:preserve-3d;transform:rotateX(var(--rx)) rotateY(var(--ry));transition:transform .12s ease-out;filter:drop-shadow(0 25px 35px #000a)}
+.card.flipped{transform:rotateX(var(--rx)) rotateY(calc(180deg + var(--ry)))}
+.face{position:absolute;inset:0;border-radius:4.6%;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#111}
+.face.back{transform:rotateY(180deg)}
+.face img{width:100%;height:100%;display:block;object-fit:cover}
+.foil,.glare{position:absolute;inset:-20%;pointer-events:none;mix-blend-mode:color-dodge}
+.foil{opacity:.42;background:
+repeating-linear-gradient(115deg,rgba(255,0,90,.65) 0 6%,rgba(255,210,0,.55) 10%,rgba(0,255,160,.55) 18%,rgba(0,160,255,.6) 26%,rgba(170,0,255,.55) 34%,rgba(255,0,90,.65) 42%);
+background-size:220% 220%;background-position:var(--mx) var(--my);filter:saturate(1.5) contrast(1.15)}
+.glare{opacity:.65;background:radial-gradient(circle at var(--mx) var(--my),rgba(255,255,255,.9) 0,rgba(255,255,255,.25) 8%,transparent 28%);mix-blend-mode:screen}
+.sparkle{position:absolute;inset:0;pointer-events:none;opacity:.25;background-image:radial-gradient(#fff 0 1px,transparent 1.5px);background-size:17px 19px;mix-blend-mode:screen}
+.hint{margin-top:18px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;font-size:12px;opacity:.78}
+.badge{display:inline-block;margin-top:8px;padding:7px 12px;border:1px solid #d8b63f66;border-radius:999px;color:#f5d86d;background:#0006;font-size:11px}
+@media (prefers-reduced-motion:reduce){.card{transition:none}.foil,.glare{display:none}}
 </style>
 </head>
 <body>
-<main class="wrap">
-  <img id="card" class="card" src="rick-perez.png" alt="Rick Perez School Marshal trading card">
-  <div class="controls">
-    <button id="flip">Show Mega Marshalon</button>
-    <a id="save" class="btn" href="rick-perez.png" download="Rick-Perez-Card.png">Save Card</a>
+<div class="wrap">
+  <div class="scene" id="scene" aria-label="Interactive Rick Perez holographic trading card">
+    <div class="card" id="card">
+      <div class="face front"><img src="front.png" alt="Rick Perez School Marshal Supervisor card"><i class="foil"></i><i class="glare"></i><i class="sparkle"></i></div>
+      <div class="face back"><img src="back.png" alt="Mega Marshall Bishop Rhino card"><i class="foil"></i><i class="glare"></i><i class="sparkle"></i></div>
+    </div>
   </div>
-  <div class="hint">Tap the button to switch between the face card and Mega Marshalon.</div>
-</main>
+  <div class="hint">Drag to tilt • Tap to flip</div>
+  <div class="badge">Bishop CISD • Digital Collectible Test</div>
+</div>
 <script>
-const card=document.getElementById('card'), flip=document.getElementById('flip'), save=document.getElementById('save');
-let back=false;
-flip.onclick=()=>{
- back=!back;
- card.src=back?'mega-marshalon.png':'rick-perez.png';
- card.alt=back?'Mega Marshalon character trading card':'Rick Perez School Marshal trading card';
- flip.textContent=back?'Show Rick Perez':'Show Mega Marshalon';
- save.href=card.src;
- save.download=back?'Mega-Marshalon-Card.png':'Rick-Perez-Card.png';
-};
+const scene=document.querySelector('#scene'), card=document.querySelector('#card');
+let moved=false, sx=0, sy=0;
+function tilt(x,y){
+ const r=scene.getBoundingClientRect(), px=(x-r.left)/r.width, py=(y-r.top)/r.height;
+ const ry=(px-.5)*22, rx=(.5-py)*22;
+ document.documentElement.style.setProperty('--mx',(px*100)+'%');
+ document.documentElement.style.setProperty('--my',(py*100)+'%');
+ document.documentElement.style.setProperty('--rx',rx+'deg');
+ document.documentElement.style.setProperty('--ry',ry+'deg');
+}
+scene.addEventListener('pointerdown',e=>{moved=false;sx=e.clientX;sy=e.clientY;scene.setPointerCapture(e.pointerId);tilt(e.clientX,e.clientY)});
+scene.addEventListener('pointermove',e=>{if(e.buttons||e.pointerType==='touch'){if(Math.hypot(e.clientX-sx,e.clientY-sy)>8)moved=true;tilt(e.clientX,e.clientY)}});
+scene.addEventListener('pointerup',()=>{if(!moved)card.classList.toggle('flipped')});
+scene.addEventListener('pointerleave',()=>{document.documentElement.style.setProperty('--rx','0deg');document.documentElement.style.setProperty('--ry','0deg')});
 </script>
 </body>
 </html>
