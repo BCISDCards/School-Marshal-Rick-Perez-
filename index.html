@@ -2,37 +2,139 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#071b10">
+
 <title>Rick Perez | Mega Marshalon</title>
+
 <style>
-*{box-sizing:border-box} body{margin:0;min-height:100vh;background:radial-gradient(circle at top,#174c2b,#07130c 55%,#000);color:#fff;font-family:Arial,Helvetica,sans-serif;display:flex;align-items:center;justify-content:center;padding:24px}
-.wrap{width:min(100%,520px);text-align:center}.card{width:100%;height:auto;border-radius:20px;box-shadow:0 18px 55px #000;display:block}
-.controls{display:flex;gap:12px;justify-content:center;margin-top:18px;flex-wrap:wrap}
-button,a.btn{border:2px solid #d7ad32;background:#0b2d18;color:#f6d86d;padding:12px 18px;border-radius:999px;font-weight:800;font-size:15px;text-decoration:none;cursor:pointer}
-button:hover,a.btn:hover{background:#164d2b}.hint{opacity:.72;font-size:13px;margin-top:13px}
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: linear-gradient(#0b4528, #020906);
+  color: white;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.wrap {
+  width: min(92%, 520px);
+  text-align: center;
+}
+
+.card {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 24px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.55);
+}
+
+.controls {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 25px;
+  flex-wrap: wrap;
+}
+
+button,
+a.btn {
+  border: 3px solid #d7ad32;
+  background: #0b4d2b;
+  color: #ffd95a;
+  padding: 14px 24px;
+  border-radius: 40px;
+  font-size: 18px;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.hint {
+  margin-top: 18px;
+  color: #ccc;
+  font-size: 16px;
+  line-height: 1.4;
+}
 </style>
 </head>
+
 <body>
+
 <main class="wrap">
-  <img id="card" class="card" src="rick-perez.png" alt="Rick Perez School Marshal trading card">
-  <div class="controls">
-    <button id="flip">Show Mega Marshalon</button>
-    <a id="save" class="btn" href="rick-perez.png" download="Rick-Perez-Card.png">Save Card</a>
-  </div>
-  <div class="hint">Tap the button to switch between the face card and Mega Marshalon.</div>
+
+<img
+  id="card"
+  class="card"
+  src="front.png"
+  alt="Rick Perez School Marshal trading card"
+>
+
+<div class="controls">
+
+<button id="flip">
+Show Mega Marshalon
+</button>
+
+<a
+  id="save"
+  class="btn"
+  href="front.png"
+  download="Rick-Perez-Card.png"
+>
+Save Card
+</a>
+
+</div>
+
+<div class="hint">
+Tap the button to switch between the Rick Perez card and Mega Marshalon.
+</div>
+
 </main>
+
 <script>
-const card=document.getElementById('card'), flip=document.getElementById('flip'), save=document.getElementById('save');
-let back=false;
-flip.onclick=()=>{
- back=!back;
- card.src=back?'mega-marshalon.png':'rick-perez.png';
- card.alt=back?'Mega Marshalon character trading card':'Rick Perez School Marshal trading card';
- flip.textContent=back?'Show Rick Perez':'Show Mega Marshalon';
- save.href=card.src;
- save.download=back?'Mega-Marshalon-Card.png':'Rick-Perez-Card.png';
+
+const card = document.getElementById("card");
+const flip = document.getElementById("flip");
+const save = document.getElementById("save");
+
+let showingBack = false;
+
+flip.onclick = () => {
+
+  showingBack = !showingBack;
+
+  if (showingBack) {
+
+    card.src = "back.png";
+    card.alt = "Mega Marshalon character trading card";
+
+    flip.textContent = "Show Rick Perez";
+
+    save.href = "back.png";
+    save.download = "Mega-Marshalon-Card.png";
+
+  } else {
+
+    card.src = "front.png";
+    card.alt = "Rick Perez School Marshal trading card";
+
+    flip.textContent = "Show Mega Marshalon";
+
+    save.href = "front.png";
+    save.download = "Rick-Perez-Card.png";
+  }
 };
+
 </script>
+
 </body>
 </html>
