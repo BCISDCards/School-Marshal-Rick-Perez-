@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Rick Perez • Holographic Marshal Card</title>
+<style>
+:root{--mx:50%;--my:50%;--rx:0deg;--ry:0deg}
+*{box-sizing:border-box}
+body{margin:0;min-height:100svh;display:grid;place-items:center;background:radial-gradient(circle at 50% 25%,#173b28,#07100b 58%,#020403);font-family:system-ui,-apple-system,sans-serif;color:#fff;overflow:hidden}
+.wrap{width:100%;text-align:center;padding:20px}
+.scene{width:min(88vw,520px);aspect-ratio:749/1050;perspective:1400px;margin:auto;touch-action:none}
+.card{width:100%;height:100%;position:relative;transform-style:preserve-3d;transform:rotateX(var(--rx)) rotateY(var(--ry));transition:transform .13s ease-out;filter:drop-shadow(0 24px 34px #000b)}
+.card.flipped{transform:rotateX(var(--rx)) rotateY(calc(180deg + var(--ry)))}
+.face{position:absolute;inset:0;border-radius:4.5%;overflow:hidden;backface-visibility:hidden;-webkit-backface-visibility:hidden;background:#080b09}
+.face.back{transform:rotateY(180deg)}
+.face img{width:100%;height:100%;display:block;object-fit:contain;background:#080b09}
+.foil,.glare,.sparkle{position:absolute;inset:0;pointer-events:none;border-radius:inherit}
+.foil{opacity:.38;mix-blend-mode:color-dodge;background:linear-gradient(115deg,transparent 5%,rgba(255,0,110,.7) 18%,rgba(255,220,0,.65) 31%,rgba(0,255,160,.65) 45%,rgba(0,170,255,.7) 59%,rgba(175,0,255,.65) 72%,transparent 90%);background-size:220% 220%;background-position:var(--mx) var(--my);filter:saturate(1.45) contrast(1.1)}
+.glare{opacity:.68;mix-blend-mode:screen;background:radial-gradient(circle at var(--mx) var(--my),rgba(255,255,255,.95),rgba(255,255,255,.25) 9%,transparent 30%)}
+.sparkle{opacity:.20;mix-blend-mode:screen;background-image:radial-gradient(#fff 0 1px,transparent 1.5px);background-size:17px 19px}
+.hint{margin-top:16px;font-size:12px;font-weight:800;letter-spacing:.09em;text-transform:uppercase;opacity:.8}
+.badge{display:inline-block;margin-top:8px;padding:7px 12px;border:1px solid #d8b63f66;border-radius:999px;color:#f5d86d;background:#0006;font-size:11px}
+@media (prefers-reduced-motion:reduce){.card{transition:none}.foil,.glare{display:none}}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <div class="scene" id="scene">
+  <div class="card" id="card">
+   <div class="face front">
+    <img src="front.png" alt="Rick Perez School Marshal Supervisor">
+    <i class="foil"></i><i class="glare"></i><i class="sparkle"></i>
+   </div>
+   <div class="face back">
+    <img src="back.png" alt="Mega Marshall — The Bishop Rhino">
+    <i class="foil"></i><i class="glare"></i><i class="sparkle"></i>
+   </div>
+  </div>
+ </div>
+ <div class="hint">Drag to tilt • Tap to flip</div>
+ <div class="badge">Bishop CISD • Digital Collectible</div>
+</div>
+<script>
+const scene=document.getElementById('scene'),card=document.getElementById('card'),root=document.documentElement;
+let moved=false,sx=0,sy=0;
+function tilt(x,y){
+ const r=scene.getBoundingClientRect();
+ const px=Math.max(0,Math.min(1,(x-r.left)/r.width));
+ const py=Math.max(0,Math.min(1,(y-r.top)/r.height));
+ root.style.setProperty('--mx',(px*100)+'%');
+ root.style.setProperty('--my',(py*100)+'%');
+ root.style.setProperty('--rx',((.5-py)*24)+'deg');
+ root.style.setProperty('--ry',((px-.5)*24)+'deg');
+}
+function reset(){root.style.setProperty('--rx','0deg');root.style.setProperty('--ry','0deg')}
+scene.addEventListener('pointerdown',e=>{moved=false;sx=e.clientX;sy=e.clientY;scene.setPointerCapture(e.pointerId);tilt(e.clientX,e.clientY)});
+scene.addEventListener('pointermove',e=>{if(e.buttons||e.pointerType==='touch'){if(Math.hypot(e.clientX-sx,e.clientY-sy)>8)moved=true;tilt(e.clientX,e.clientY)}});
+scene.addEventListener('pointerup',()=>{if(!moved)card.classList.toggle('flipped');setTimeout(reset,120)});
+scene.addEventListener('pointercancel',reset);
+scene.addEventListener('pointerleave',e=>{if(e.pointerType==='mouse')reset()});
+</script>
+</body>
+</html>
